@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/save")
-    public ResponseEntity<UserResponse> add(@RequestBody UserDto userDto){
+    public ResponseEntity<?> add(@RequestBody UserDto userDto){
 
 
         return ResponseEntity.ok(userService.add(userDto));
@@ -26,8 +26,14 @@ public class UserController {
     }
 
     @PostMapping("/authon")
-    public ResponseEntity<UserResponse> login(UserRequestDto userRequestDto){
+    public ResponseEntity<?> login(UserRequestDto userRequestDto){
 
         return ResponseEntity.ok(userService.login(userRequestDto));
+    }
+
+    @GetMapping("/yeni")
+    public ResponseEntity<String> getYeni(){
+
+        return ResponseEntity.ok("Yeni");
     }
 }

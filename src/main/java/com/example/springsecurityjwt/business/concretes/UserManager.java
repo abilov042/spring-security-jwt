@@ -2,6 +2,8 @@ package com.example.springsecurityjwt.business.concretes;
 
 import com.example.springsecurityjwt.business.abstractes.UserService;
 
+import com.example.springsecurityjwt.core.untilitues.result.DataResult;
+import com.example.springsecurityjwt.core.untilitues.result.SuccessDataResult;
 import com.example.springsecurityjwt.dataAccess.abstracts.UserDao;
 import com.example.springsecurityjwt.dataAccess.dtos.UserDto;
 import com.example.springsecurityjwt.dataAccess.dtos.UserRequestDto;
@@ -21,7 +23,7 @@ public class UserManager implements UserService {
     private final JwtManager jwtManager;
     private final AuthenticationManager authenticationManager;
     @Override
-    public UserResponse add(UserDto userDto) {
+    public DataResult<UserResponse> add(UserDto userDto) {
 
         User user = new User();
         user.setUsername(userDto.getUsername());
@@ -32,15 +34,15 @@ public class UserManager implements UserService {
         String token = jwtManager.generateToken(user);
 
 
-        return UserResponse.builder().token(token).build();
+        return new SuccessDataResult<UserResponse>(UserResponse.builder().token(token).build(),"Generated token");
     }
 
     @Override
-    public UserResponse login(UserRequestDto userRequestDto) {
+    public DataResult<UserResponse> login(UserRequestDto userRequestDto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userRequestDto.getUsername(), userRequestDto.getPassword()));
         User user = userDao.findByUsername(userRequestDto.getUsername()).orElseThrow();
 
         String token = jwtManager.generateToken(user);
-        return UserResponse.builder().token(token).build();
+        return new SuccessDataResult<UserResponse>(UserResponse.builder().token(token).build(),"Generated token");
     }
 }
