@@ -1,6 +1,6 @@
 package com.example.springsecurityjwt.entities;
 
-public enum Role {
+public enum ERole {
     USER,
     ADMIN
 }

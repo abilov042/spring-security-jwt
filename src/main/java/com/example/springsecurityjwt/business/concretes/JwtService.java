@@ -15,10 +15,10 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 @Service
-public class JwtManager {
+public class JwtService {
 
-    @Value("{$security.jwt.secret}")
-    private String SECTRET_KEY;
+
+    private String SECTRET_KEY = "DWygajkakvKtvT6SxFduSLiPo7PnqGq5i2lb2DBqimEcuQVttOlH7B21wi1cT6se";
     public String findUsername(String jwt){
 
         return exportToken(jwt,Claims::getSubject);
