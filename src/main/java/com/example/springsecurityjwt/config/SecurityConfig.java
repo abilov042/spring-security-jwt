@@ -61,6 +61,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
+                                .requestMatchers(permitSwagger).permitAll()
                                 .anyRequest().authenticated()
                 );
 
@@ -70,4 +71,12 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    public static String[] permitSwagger = {
+            "/api/v1/auth/**",
+            "v3/api-docs/**",
+            "v3/api-docs.yanl",
+            "swagger-ui/**",
+            "swagger-ui.html"
+    };
 }

@@ -33,15 +33,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AuthController {
 
-    AuthenticationManager authenticationManager;
 
-    UserDao userDao;
+    private AuthenticationManager authenticationManager;
 
-    RoleDao roleDao;
+    private UserDao userDao;
 
-    PasswordEncoder encoder;
+    private RoleDao roleDao;
 
-    JwtUtils jwtUtils;
+    private PasswordEncoder encoder;
+
+    private JwtUtils jwtUtils;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -53,16 +54,17 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+        return ResponseEntity.ok()
                 .body(new UserInfoResponse(userDetails.getId(),
                         userDetails.getUsername(),
                         userDetails.getEmail(),
+                        jwt,
                         roles));
     }
 
@@ -112,10 +114,13 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully!");
     }
 
-    @PostMapping("/signout")
-    public ResponseEntity<?> logoutUser() {
-        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body("You've been signed out!");
+
+
+
+    @GetMapping("test")
+    public ResponseEntity<String> getHello(){
+        System.out.println(encoder.encode("123"));
+
+        return ResponseEntity.ok("OK");
     }
 }
